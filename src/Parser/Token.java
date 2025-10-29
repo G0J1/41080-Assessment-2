@@ -108,9 +108,9 @@ public class Token {
             case LET:
                 return "≜";
             case LPAREN:
-                return "(";
+                return "[";
             case RPAREN:
-                return ")";
+                return "]";
             default:
                 return "Error converting token to String.";
         }
