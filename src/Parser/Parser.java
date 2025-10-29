@@ -20,7 +20,7 @@ public class Parser {
     ;
 
 
-    public static List<Token> parse(String input) {
+    public static List<Object> parse(List<Token> input) {
         System.out.println("runs!");
         Stack<nonterminals> stack = new Stack<>();
 
@@ -30,47 +30,47 @@ public class Parser {
         nonterminals currentNonTerminals = nonterminals.program;
         terminals currentTerminal = null;
 
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
+        for (Token current : input) {
+//            char c = input.charAt(i);
+//
+//            if(Character.isDigit(c)){
+//                currentTerminal = terminals.NUMBER;
+//            }
+//            else if(Character.isLetter(c)){
+//                currentTerminal =  terminals.IDENTIFIER;
+//            }
 
-            if(Character.isDigit(c)){
-                currentTerminal = terminals.NUMBER;
-            }
-            else if(Character.isLetter(c)){
-                currentTerminal =  terminals.IDENTIFIER;
-            }
-
-            switch (c) {
-                case '(':
-                    currentTerminal = terminals.LPAREN;
-                    break;
-                case ')':
-                    currentTerminal = terminals.RPAREN;
-                    break;
-                case '+':
-                    currentTerminal = terminals.PLUS;
-                    break;
-                case '=':
-                    currentTerminal = terminals.EQUALS;
-                    break;
-                case '×':
-                    currentTerminal = terminals.MULTI;
-                    break;
-                case '-':
-                    currentTerminal = terminals.MINUS;
-                    break;
-                case '?':
-                    currentTerminal = terminals.CONDITIONAL;
-                    break;
-                case 'λ':
-                    currentTerminal = terminals.LAMBDA;
-                    break;
-                case '≜':
-                    currentTerminal = terminals.LET;
-                    break;
-                default:
-                    break;
-            }
+//            switch (c) {
+//                case '(':
+//                    currentTerminal = terminals.LPAREN;
+//                    break;
+//                case ')':
+//                    currentTerminal = terminals.RPAREN;
+//                    break;
+//                case '+':
+//                    currentTerminal = terminals.PLUS;
+//                    break;
+//                case '=':
+//                    currentTerminal = terminals.EQUALS;
+//                    break;
+//                case '×':
+//                    currentTerminal = terminals.MULTI;
+//                    break;
+//                case '-':
+//                    currentTerminal = terminals.MINUS;
+//                    break;
+//                case '?':
+//                    currentTerminal = terminals.CONDITIONAL;
+//                    break;
+//                case 'λ':
+//                    currentTerminal = terminals.LAMBDA;
+//                    break;
+//                case '≜':
+//                    currentTerminal = terminals.LET;
+//                    break;
+//                default:
+//                    break;
+//            }
 
             //Production Rules
 
@@ -151,6 +151,6 @@ public class Parser {
 //            System.out.println(tokens);
 
 
-    return Collections.<Token>emptyList();
+    return Collections.<Object>emptyList();
     }
 }
