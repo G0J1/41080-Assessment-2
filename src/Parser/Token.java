@@ -4,7 +4,7 @@ import java.util.Optional;
 public class Token {
     public enum TokenType {
 
-        NUMBER, PLUS, MINUS, TIMES, DIVIDE, NONE;
+        NUMBER, IDENTIFIER, PLUS, MINUS, MULT, EQUALS, CONDITIONAL, LAMBDA, LET, LPAREN, RPAREN, NONE;
 
         public boolean isNumber() {
             switch (this) {
@@ -56,12 +56,22 @@ public class Token {
         switch (symbol) {
             case '+':
                 return TokenType.PLUS;
-            case '-':
+            case '−':
                 return TokenType.MINUS;
-            case '*':
-                return TokenType.TIMES;
-            case '/':
-                return TokenType.DIVIDE;
+            case '×':
+                return TokenType.MULT;
+            case '=':
+                return TokenType.EQUALS;
+            case '?':
+                return TokenType.CONDITIONAL;
+            case 'λ':
+                return TokenType.LAMBDA;
+            case '≜':
+                return TokenType.LET;
+            case '(':
+                return TokenType.LPAREN;
+            case ')':
+                return TokenType.RPAREN;
             case '0':
             case '1':
             case '2':
@@ -86,11 +96,21 @@ public class Token {
             case PLUS:
                 return "+";
             case MINUS:
-                return "-";
-            case TIMES:
-                return "*";
-            case DIVIDE:
-                return "/";
+                return "−";
+            case MULT:
+                return "×";
+            case EQUALS:
+                return "=";
+            case CONDITIONAL:
+                return "?";
+            case LAMBDA:
+                return "λ";
+            case LET:
+                return "≜";
+            case LPAREN:
+                return "(";
+            case RPAREN:
+                return ")";
             default:
                 return "Error converting token to String.";
         }
