@@ -90,6 +90,7 @@ public class Parser {
 //                    error("extra input")
         }
 
+        // old stuff, can probably delete
 //        for (Token current : input) {
 //            currentTerminal = tokenToTerminal(current);
 //
