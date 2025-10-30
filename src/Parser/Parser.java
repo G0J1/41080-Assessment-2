@@ -13,21 +13,12 @@ public class Parser {
         program, expr, parenexpr, $
     };
 
-    public static List<Object> parse(List<Token> input) {
-        System.out.println("runs!");
-        Stack<nonterminals> stack = new Stack<>();
+    // sets up empty parse table, outer map has non terminals as the key (horizontal row headings) and has the inner table
+    // as its value, the inner table forms the vertical rows which are keyed by the tokentype (which is an enum in the token class)
+    // and a List<Object> as its value (for each cell) which are the production rules
+    public static final EnumMap<nonterminals, EnumMap<Token.TokenType, List<Object>>> parseTable = new EnumMap<>(nonterminals.class);
 
-        stack.push(nonterminals.$);
-        stack.push(nonterminals.program);
-
-        nonterminals currentNonTerminals = nonterminals.program;
-        terminals currentTerminal = terminals.$;
-
-        // sets up empty parse table, outer map has non terminals as the key (horizontal row headings) and has the inner table
-        // as its value, the inner table forms the vertical rows which are keyed by the tokentype (which is an enum in the token class)
-        // and a List<Object> as its value (for each cell) which are the production rules
-        EnumMap<nonterminals, EnumMap<Token.TokenType, List<Object>>> parseTable = new EnumMap<>(nonterminals.class);
-
+    static {
         // adds empty rows to the table for each non-terminal
         parseTable.put(nonterminals.program, new EnumMap<>(Token.TokenType.class));
         parseTable.put(nonterminals.expr, new EnumMap<>(Token.TokenType.class));
@@ -61,6 +52,43 @@ public class Parser {
         parenExprRow.put(Token.TokenType.LAMBDA, List.of(Token.TokenType.LAMBDA, Token.TokenType.IDENTIFIER, nonterminals.expr));
         parenExprRow.put(Token.TokenType.LET, List.of(Token.TokenType.LET, Token.TokenType.IDENTIFIER, nonterminals.expr));
 
+    }
+
+
+    public static List<Object> parse(List<Token> input) {
+        System.out.println("runs!");
+        Stack<nonterminals> stack = new Stack<>();
+
+        stack.push(nonterminals.$);
+        stack.push(nonterminals.program);
+//      lookahead = first token (this is something we have to do before the loop)
+
+        // idk if we'll need this stuff
+        nonterminals currentNonTerminal = nonterminals.program;
+        terminals currentTerminal = terminals.$;
+
+        // this is the loop where the actual parsing is gonna happen
+        while (stack.isEmpty() == false) {
+            // psuedo code for stack loop
+//            top = stack.pop()
+//
+//            if top is a terminal:
+//                if top matches lookahead:
+//                    advance to next token
+//                else:
+//                    error("unexpected token")
+//            else if top is a nonterminal:
+//                production = parseTable[top][lookahead.type]
+//                if production exists:
+//                    push production symbols in reverse order
+//                else:
+//                    error("no rule for " + top + " with " + lookahead)
+//            else if top == $:
+//                if lookahead == $:
+//                    success!
+//                else:
+//                    error("extra input")
+        }
 //        for (Token current : input) {
 //            currentTerminal = tokenToTerminal(current);
 //
