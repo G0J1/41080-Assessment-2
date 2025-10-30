@@ -12,13 +12,21 @@ public final class Lexer{
         for  (int i = 0; i < input.length(); i++){
             char c = input.charAt(i);
 
-            if (Character.isDigit(c) || symbols.contains(String.valueOf(c)) || Character.isLetter(c)) {
+            if (Character.isDigit(c) || Character.isLetter(c)) {
                 buffer = buffer + c;
             }
             else if (Character.isWhitespace(c)) {
                 addToTokenList(buffer, tokens, symbols);
 
                 buffer = "";
+            }
+            else if (symbols.contains(String.valueOf(c))) {
+                if (buffer.length() > 0) {
+                    addToTokenList(buffer, tokens, symbols);
+                    buffer = "";
+                }
+
+                addToTokenList(String.valueOf(c), tokens, symbols);
             }
 
         }

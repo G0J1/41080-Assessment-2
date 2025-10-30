@@ -64,8 +64,8 @@ public class Parser {
 //      lookahead = first token (this is something we have to do before the loop)
 
         // idk if we'll need this stuff
-        nonterminals currentNonTerminal = nonterminals.program;
-        terminals currentTerminal = terminals.$;
+//        nonterminals currentNonTerminal = nonterminals.program;
+//        terminals currentTerminal = terminals.$;
 
         // this is the loop where the actual parsing is gonna happen
         while (stack.isEmpty() == false) {
@@ -89,6 +89,7 @@ public class Parser {
 //                else:
 //                    error("extra input")
         }
+
 //        for (Token current : input) {
 //            currentTerminal = tokenToTerminal(current);
 //
