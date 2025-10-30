@@ -1,9 +1,15 @@
 package Parser;
 
-public class Runner {
-    public static void main(String[] args) {
-        String testInput = "(";
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-        Parser.parse(testInput);
+public class Runner {
+    public static void main(String[] args) throws NumberException, ExpressionException {
+        String testInput = "(+ x (+ 2 2))";
+        List<Token> tokenizedInput = Lexer.analyse(testInput);
+        System.out.println(tokenizedInput);
+//        Parser.parse(tokenizedInput);
+//        Parser.parse();
     }
 }

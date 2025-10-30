@@ -15,34 +15,49 @@ public class Token {
             }
         }
 
+        public boolean isIdentifier() {
+            switch (this) {
+                case IDENTIFIER:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
     }
 
     private TokenType type;
     private double value;
+    private String identifier;
 
     public Token() {
         this.type = TokenType.NONE;
         this.value = Double.NaN;
     }
 
-    public Token(double value) {
-        this.type = TokenType.NUMBER;
-        this.value = value;
-    }
-
     public Token(int value) {
         this.type = TokenType.NUMBER;
         this.value = value;
+        this.identifier = null;
     }
 
     public Token(TokenType type) {
         this.type = type;
         this.value = Double.NaN;
+        this.identifier = null;
+    }
+
+    public Token(String identifier) {
+        this.type = TokenType.IDENTIFIER;
+        this.value = Double.NaN;
+        this.identifier = identifier;
     }
 
     public boolean isNumber() {
         return type.isNumber();
     }
+
+    public boolean isIdentifier() {return type.isIdentifier(); }
 
     public TokenType getType() {
         return this.type;
@@ -51,6 +66,8 @@ public class Token {
     public Optional<Double> getValue() {
         return this.isNumber() ? Optional.of(value) : Optional.empty();
     }
+
+    public Optional<String> getIdentifierName() { return this.isIdentifier() ? Optional.of(identifier) : Optional.empty(); }
 
     public static TokenType typeOf(char symbol) {
         switch (symbol) {
@@ -111,6 +128,11 @@ public class Token {
                 return "[";
             case RPAREN:
                 return "]";
+            case IDENTIFIER:
+                if (identifier != null) {
+                    return identifier;
+                }
+                return "error";
             default:
                 return "Error converting token to String.";
         }
