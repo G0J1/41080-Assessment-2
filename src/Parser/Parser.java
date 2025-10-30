@@ -7,17 +7,16 @@ import java.util.List;
 import java.util.Stack;
 
 public class Parser {
+
+
     private enum nonterminals {
         program, expr, parenexpr, $
-    }
-
-    ;
+    };
 
     private enum terminals {
         NUMBER, IDENTIFIER, LPAREN, RPAREN, PLUS, MULTI, MINUS, EQUALS, CONDITIONAL, LAMBDA, LET, $
-    }
+    };
 
-    ;
 
 
     public static List<Object> parse(List<Token> input) {
@@ -28,7 +27,7 @@ public class Parser {
         stack.push(nonterminals.program);
 
         nonterminals currentNonTerminals = nonterminals.program;
-        terminals currentTerminal = null;
+        terminals currentTerminal = terminals.$;
 
         for (Token current : input) {
 //            char c = input.charAt(i);

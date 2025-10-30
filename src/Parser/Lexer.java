@@ -7,92 +7,55 @@ public final class Lexer{
     // Call this from main
     public static List<Token> analyse(String input) throws NumberException, ExpressionException {
         ArrayList<Token> tokens = new ArrayList<>();
-        int i = 0, n = input.length();
+        String buffer = "";
+        String symbols = "+×−=?λ≜()";
+        for  (int i = 0; i < input.length(); i++){
+            char c = input.charAt(i);
 
-        while (i < n) {
-            char ch = input.charAt(i);
-
-            // Skip whitespace
-            if (Character.isWhitespace(ch)) { i++; continue; }
-
-            // 2-char operator: LET := (optional, if you support it)
-            if (ch == ':' && i + 1 < n && input.charAt(i + 1) == '=') {
-                tokens.add(new Token(Token.TokenType.LET));
-                i += 2;
-                continue;
+            if (Character.isDigit(c) || symbols.contains(String.valueOf(c)) || Character.isLetter(c)) {
+                buffer = buffer + c;
             }
+            else if (Character.isWhitespace(c)) {
+                addToTokenList(buffer, tokens, symbols);
 
-            // Number: integer or decimal (e.g., 42, 0.5, 12.34)
-            if (Character.isDigit(ch)) {
-                int start = i;
-                // integer part
-                while (i < n && Character.isDigit(input.charAt(i))) i++;
-                boolean isDouble = false;
-                // optional fractional part
-                if (i < n && input.charAt(i) == '.') {
-                    isDouble = true;
-                    i++; // consume '.'
-                    if (i >= n || !Character.isDigit(input.charAt(i))) {
-                        // "12." or "." are invalid numbers for this lexer
-                        throw new NumberException();
-                    }
-                    while (i < n && Character.isDigit(input.charAt(i))) i++;
+                buffer = "";
+            }
+            else if (symbols.contains(String.valueOf(c))) {
+                if (!buffer.isEmpty()) {
+                    addToTokenList(buffer, tokens, symbols);
+                    buffer = "";
                 }
-                String num = input.substring(start, i);
-                try {
-                    if (isDouble) {
-                        tokens.add(new Token(Double.parseDouble(num)));
-                    } else {
-                        // your Token(int) will set NUMBER
-                        tokens.add(new Token(Integer.parseInt(num)));
-                    }
-                } catch (NumberFormatException e) {
-                    throw new NumberException();
-                }
-                continue;
+                addToTokenList(String.valueOf(c), tokens, symbols);
             }
 
-            // Identifier: letter or underscore, followed by letters/digits/_/-
-            if (isIdentStart(ch)) {
-                int start = i;
-                i++;
-                while (i < n && isIdentPart(input.charAt(i))) i++;
-                String ident = input.substring(start, i);
-                // If you want to recognize "lambda" as λ at lex time, do it here.
-                // Otherwise just emit IDENTIFIER; Token has no place to store the name.
-                tokens.add(new Token(Token.TokenType.IDENTIFIER));
-                continue;
-            }
-
-            // Single-character tokens (with ASCII fallbacks for '-' and '*')
-            char mapped = mapAsciiFallback(ch); // '-'->'−', '*'->'×', else same
-            Token.TokenType t = Token.typeOf(mapped);
-            if (t != Token.TokenType.NONE) {
-                tokens.add(new Token(t));
-                i++;
-                continue;
-            }
-
-            // Unknown character
-            throw new ExpressionException();
         }
-
+        if (!(buffer.isEmpty())) {
+            addToTokenList(buffer, tokens, symbols);
+        }
         return tokens;
     }
 
-    private static boolean isIdentStart(char c) {
-        return Character.isLetter(c) || c == '_';
-    }
-
-    private static boolean isIdentPart(char c) {
-        return Character.isLetterOrDigit(c) || c == '_' || c == '-';
-    }
-
-    private static char mapAsciiFallback(char c) {
-        // Map ASCII variants to the Unicode symbols your Token.typeOf understands
-        if (c == '-') return '−';  // MINUS
-        if (c == '*') return '×';  // MULT
-        return c;
+    public static void addToTokenList(String num, ArrayList<Token> Tokens, String symbols) {
+        boolean isIDENTITY = false;
+        for (char c : num.toCharArray()) {
+            if (Character.isLetter(c)) {
+                isIDENTITY = true;
+            }
+        }
+//        if (isIDENTITY) {
+//            Token newToken = new Token();
+//
+//        }
+        if (!(num.contains(".")) && !(symbols.contains(num))) {
+            int k = Integer.parseInt(num);
+            Token newToken = new Token(k);
+            Tokens.add(newToken);
+        }
+        else if (symbols.contains(num)) {
+            Token newToken = new Token(Token.typeOf(num.charAt(0)));
+            System.out.println(newToken.getType());
+            Tokens.add(newToken);
+        }
     }
 
 }
