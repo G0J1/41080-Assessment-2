@@ -20,13 +20,6 @@ public final class Lexer{
 
                 buffer = "";
             }
-            else if (symbols.contains(String.valueOf(c))) {
-                if (!buffer.isEmpty()) {
-                    addToTokenList(buffer, tokens, symbols);
-                    buffer = "";
-                }
-                addToTokenList(String.valueOf(c), tokens, symbols);
-            }
 
         }
         if (!(buffer.isEmpty())) {
@@ -36,26 +29,32 @@ public final class Lexer{
     }
 
     public static void addToTokenList(String num, ArrayList<Token> Tokens, String symbols) {
-        boolean isIDENTITY = false;
+        boolean isIDENTIFIER = false;
         for (char c : num.toCharArray()) {
             if (Character.isLetter(c)) {
-                isIDENTITY = true;
+                isIDENTIFIER = true;
             }
         }
 //        if (isIDENTITY) {
 //            Token newToken = new Token();
 //
 //        }
-        if (!(num.contains(".")) && !(symbols.contains(num))) {
+        if (num.matches("[0-9]+")) {
             int k = Integer.parseInt(num);
             Token newToken = new Token(k);
             Tokens.add(newToken);
         }
-        else if (symbols.contains(num)) {
+        else if (num.matches("[a-zA-Z][a-zA-Z0-9]*")) {
+            System.out.println("tokenize identifier");
+            Token newToken = new Token(num);
+            Tokens.add(newToken);
+        }
+        else if (symbols.contains(num) && num.length() == 1) {
             Token newToken = new Token(Token.typeOf(num.charAt(0)));
             System.out.println(newToken.getType());
             Tokens.add(newToken);
         }
     }
-
 }
+
+
