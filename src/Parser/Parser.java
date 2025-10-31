@@ -57,152 +57,47 @@ public class Parser {
 
     public static List<Object> parse(List<Token> input) {
         System.out.println("runs!");
-        Stack<nonterminals> stack = new Stack<>();
+        Stack<Object> stack = new Stack<>();
 
         stack.push(nonterminals.$);
         stack.push(nonterminals.program);
-//      lookahead = first token (this is something we have to do before the loop)
+        Object lookahead = stack.peek();
 
-        // idk if we'll need this stuff
-//        nonterminals currentNonTerminal = nonterminals.program;
-//        terminals currentTerminal = terminals.$;
 
         // this is the loop where the actual parsing is gonna happen
-        while (stack.isEmpty() == false) {
+        while (!stack.isEmpty()) {
             // psuedo code for stack loop
-//            top = stack.pop()
-//
-//            if top is a terminal:
-//                if top matches lookahead:
-//                    advance to next token
-//                else:
-//                    error("unexpected token")
-//            else if top is a nonterminal:
-//                production = parseTable[top][lookahead.type]
-//                if production exists:
-//                    push production symbols in reverse order
-//                else:
-//                    error("no rule for " + top + " with " + lookahead)
-//            else if top == $:
-//                if lookahead == $:
-//                    success!
-//                else:
-//                    error("extra input")
-        }
+           Object top = stack.pop();
 
-        // old stuff, can probably delete
-//        for (Token current : input) {
-//            currentTerminal = tokenToTerminal(current);
-//
-//            //Production Rules
-//
-//            switch (currentTerminal) {
-//                case NUMBER:
-//                    //program NUMBER construction rule
-//                    if (currentNonTerminals == nonterminals.program) {
-//                        stack.pop();
-//                        stack.push(nonterminals.expr);
-//                        System.out.println("Number read");
-//                        currentNonTerminals = nonterminals.expr;
-//                    }
-//                    //expr NUMBER construction rule
-//                    else if (currentNonTerminals == nonterminals.expr) {
-//
-//                    }
-//                    else if(currentNonTerminals == nonterminals.parenexpr) {
-//
-//                    }
-//                    break;
-//                case IDENTIFIER:
-//                    if (currentNonTerminals == nonterminals.program) {
-//                        stack.pop();
-//                        stack.push(nonterminals.expr);
-//                        System.out.println("Identifier read");
-//                        currentNonTerminals = nonterminals.expr;
-//                    }
-//                    else if (currentNonTerminals == nonterminals.expr) {
-//
-//                    }
-//                    else if(currentNonTerminals == nonterminals.parenexpr) {
-//
-//                    }
-//                    break;
-//                case LPAREN:
-//                    if (currentNonTerminals == nonterminals.program) {
-//                        System.out.println("parenthesis read");
-//                        currentNonTerminals = nonterminals.expr;
-//                    }
-//                    else if (currentNonTerminals == nonterminals.expr) {
-//
-//                    }
-//                    else if(currentNonTerminals == nonterminals.parenexpr) {
-//
-//                    }
-//                    break;
-//                case RPAREN:
-//                    break;
-//                case PLUS:
-//                    break;
-//                case MULT:
-//                    break;
-//                case EQUALS:
-//                    break;
-//                case MINUS:
-//                    break;
-//                case CONDITIONAL:
-//                    break;
-//                case LAMBDA:
-//                    break;
-//                case LET:
-//                    break;
-//
-//                }
-//
-//            }
+            if (!(top instanceof nonterminals)) {
+                if (top == lookahead) {
+                    stack.peek();
+                } else {
+                    error("Unexpected token");
+                }
+            }
+            else if (){
+                production = parseTable[top][lookahead];
 
+                if production exists{
+                    push production symbols in reverse order
+                }
+                else{
+                    error("no rule for " + top + " with " + lookahead)
+                }
+            else if (top == "$"){
+                    if (lookahead == "$"){
+                        System.out.println("Success!");
+                    }
+                }
+                else{
+                    error("extra input");
+                }
+                }
+            }
 
-//            char[] inputs = input.toCharArray();
-//            ArrayList<Token> tokens = new ArrayList<Token>();
-//            for (int i = 0; i < input.length(); i++) {
-//                tokens.add(new Token(inputs[i]));
-//            }
-//            stack.pop();
-//            stack.push(nonterminals.expr);
-
-
-//            System.out.println(tokens);
 
 
     return Collections.<Object>emptyList();
     }
-
-//    public static terminals tokenToTerminal(Token token) {
-//        switch (token.getType()) {
-//            case NUMBER:
-//                return  terminals.NUMBER;
-//            case IDENTIFIER:
-//                return  terminals.IDENTIFIER;
-//            case LPAREN:
-//                return  terminals.LPAREN;
-//            case RPAREN:
-//                return  terminals.RPAREN;
-//            case PLUS:
-//                return  terminals.PLUS;
-//            case MINUS:
-//                return terminals.MINUS;
-//            case MULT:
-//                return terminals.MULT;
-//            case EQUALS:
-//                return terminals.EQUALS;
-//            case CONDITIONAL:
-//                return terminals.CONDITIONAL;
-//            case LAMBDA:
-//                return terminals.LAMBDA;
-//            case LET:
-//                return terminals.LET;
-//            default:
-//                return terminals.$;
-//        }
-//
-//    }
 }
