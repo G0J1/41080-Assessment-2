@@ -28,6 +28,10 @@ public final class Lexer{
 
                 addToTokenList(String.valueOf(c), tokens, symbols);
             }
+            else {
+                System.out.println("Input is not valid");
+                throw new NumberException();
+            }
 
         }
         if (!(buffer.isEmpty())) {

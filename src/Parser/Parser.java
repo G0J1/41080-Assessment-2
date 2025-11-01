@@ -40,7 +40,7 @@ public class Parser {
 
         // does the same for the expr non terminal, it has the same rules as the program
         exprRow.put(Token.TokenType.NUMBER, List.of(Token.TokenType.NUMBER));
-        exprRow.put(Token.TokenType.IDENTIFIER, List.of(Token.TokenType.NUMBER));
+        exprRow.put(Token.TokenType.IDENTIFIER, List.of(Token.TokenType.IDENTIFIER));
         exprRow.put(Token.TokenType.LPAREN, List.of(Token.TokenType.LPAREN, nonterminals.parenexpr, Token.TokenType.RPAREN));
 
         // then also the production rules for paren-expr
@@ -64,7 +64,7 @@ public class Parser {
         stack.push(nonterminals.$);
         stack.push(nonterminals.program);
         Token lookahead = input.get(0);
-        System.out.println("stack: " + stack);
+//        System.out.println("stack: " + stack);
         int lookaheadIndex = 0;
 
         // this is the loop where the actual parsing is gonna happen
@@ -101,7 +101,7 @@ public class Parser {
 
                 if (production != null) {
                     stack.pop();
-                    System.out.println("production: " + production);
+//                    System.out.println("production: " + production);
 //                    System.out.println("production at index 0: " + production.get(0));
 //                    System.out.println("table rule: " + parseTable.get(nonterminals.program).get(Token.TokenType.LPAREN));
 //                        System.out.println(i);
