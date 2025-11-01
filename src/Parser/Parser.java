@@ -8,10 +8,13 @@ import java.util.Stack;
 
 public class Parser {
 
+    private static LinkedList<Token> parseTree = new LinkedList<Token>();
 
     private enum nonterminals {
         program, expr, parenexpr, $
-    };
+    }
+
+    ;
 
     // sets up empty parse table, outer map has non terminals as the key (horizontal row headings) and has the inner table
     // as its value, the inner table forms the vertical rows which are keyed by the tokentype (which is an enum in the token class)
@@ -36,9 +39,9 @@ public class Parser {
         programRow.put(Token.TokenType.LPAREN, List.of(nonterminals.expr));
 
         // does the same for the expr non terminal, it has the same rules as the program
-        exprRow.put(Token.TokenType.NUMBER, List.of(nonterminals.expr));
-        exprRow.put(Token.TokenType.IDENTIFIER, List.of(nonterminals.expr));
-        exprRow.put(Token.TokenType.LPAREN, List.of(nonterminals.expr));
+        exprRow.put(Token.TokenType.NUMBER, List.of(Token.TokenType.NUMBER));
+        exprRow.put(Token.TokenType.IDENTIFIER, List.of(Token.TokenType.NUMBER));
+        exprRow.put(Token.TokenType.LPAREN, List.of(Token.TokenType.LPAREN, nonterminals.parenexpr, Token.TokenType.RPAREN));
 
         // then also the production rules for paren-expr
         parenExprRow.put(Token.TokenType.NUMBER, List.of(nonterminals.expr, nonterminals.expr));
@@ -55,49 +58,67 @@ public class Parser {
     }
 
 
-    public static List<Object> parse(List<Token> input) {
-        System.out.println("runs!");
+    public static List<Token> parse(List<Token> input) throws ExpressionException, NumberException {
         Stack<Object> stack = new Stack<>();
 
         stack.push(nonterminals.$);
         stack.push(nonterminals.program);
-        Object lookahead = stack.peek();
-
+        Token lookahead = input.get(0);
+        System.out.println("stack: " + stack);
+        int lookaheadIndex = 0;
 
         // this is the loop where the actual parsing is gonna happen
         while (!stack.isEmpty()) {
-            // psuedo code for stack loop
-           Object top = stack.pop();
 
-            if (!(top instanceof nonterminals)) {
-                if (top == lookahead) {
-                    stack.peek();
+            // pseudo code for stack loop
+            Object top = stack.peek();
+            System.out.println("parsetree: " + parseTree);
+            System.out.println("stack: " + stack);
+            System.out.println("top: " + top);
+            System.out.println("lookahead: " + lookahead);
+
+            if (lookaheadIndex < input.size()) {
+                lookahead = input.get(lookaheadIndex);
+            }
+
+            if (top instanceof Token.TokenType) {
+                if (top == lookahead.getType()) {
+                    parseTree.add(lookahead);
+                    lookaheadIndex++;
+                    stack.pop();
                 } else {
-                    error("Unexpected token");
+                    throw new ExpressionException("Unexpected token");
                 }
             }
-            else if (){
-                production = parseTable[top][lookahead];
+            else if (top == nonterminals.$) {
+                System.out.println("Success");
+                return parseTree;
+            }
 
-                if production exists{
-                    push production symbols in reverse order
-                }
-                else{
-                    error("no rule for " + top + " with " + lookahead)
-                }
-            else if (top == "$"){
-                    if (lookahead == "$"){
-                        System.out.println("Success!");
+            else if (top instanceof nonterminals) {
+
+                List<Object> production = parseTable.get(top).get(lookahead.getType());
+
+                if (production != null) {
+                    stack.pop();
+                    System.out.println("production: " + production);
+//                    System.out.println("production at index 0: " + production.get(0));
+//                    System.out.println("table rule: " + parseTable.get(nonterminals.program).get(Token.TokenType.LPAREN));
+//                        System.out.println(i);
+//                        System.out.println(production.get(i));
+                    for (int i = production.size() - 1; i >= 0; i--) {
+                        stack.push(production.get(i));
                     }
-                }
-                else{
-                    error("extra input");
-                }
+                } else {
+                    System.out.println(lookahead.getType());
+                    throw new ExpressionException("No rule for " + top + " with lookahead " + lookahead);
                 }
             }
 
-
-
-    return Collections.<Object>emptyList();
+            else {
+                throw new ExpressionException("Extra input");
+            }
+        }
+        return parseTree;
     }
 }
