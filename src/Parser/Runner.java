@@ -26,26 +26,16 @@ public class Runner {
 
         try {
             String basicTest1 = "y";
-//            blah(basicTest1);
             String basicTest2 = "67";
-//            blah(basicTest2);
             String basicTest3 = "(− 2 2)";
-//            blah(basicTest3);
             String basicTest4 = "(= x 5)";
-//            blah(basicTest4);
 
             String nestedTest1 = "(+ (+ 4 2) 0)";
-//            blah(nestedTest1);
             String nestedTest2 = "(? (+ 1 z) 5 9)";
-//            blah(nestedTest2);
-
 
             String functionTest1 = "(≜ x 5 7)";
-//            blah(functionTest1);
             String functionTest2 = "(λ a 5)";
-//            blah(functionTest2);
             String functionTest3 = "((λ j (+ x 8)) 7)";
-//            blah(functionTest3);
 
             String errorTest1 = "(+ 2 1";
             String errorTest2 = ")";
@@ -131,11 +121,5 @@ public class Runner {
         }
     }
 
-    public static void blah(String input) throws NumberException, ExpressionException {
-        System.out.println("Input: " + input);
-        List<Token> tokenizedInput = Lexer.analyse(input);
-        String parseTree = Parser.parseTreeToString(tokenizedInput);
-        System.out.println("Output: " + parseTree);
-    }
 }
 

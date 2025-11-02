@@ -15,8 +15,8 @@ public class Parser {
     }
 
     // --- Simple error context (kept minimal) ---
-    private static final Stack<String> opNames = new Stack<>();     // "+", "-", "×", "=", "?", "λ", "≜", "apply"
-    private static final Stack<Integer> opExpected = new Stack<>(); // -1 = variable-arity
+    private static final Stack<String> opNames = new Stack<>();
+    private static final Stack<Integer> opExpected = new Stack<>();
     private static int parenDepth = 0;
 
     private static boolean isExprStart(Token.TokenType t) {
@@ -25,7 +25,7 @@ public class Parser {
             || t == Token.TokenType.LPAREN;
     }
 
-    // Look ahead to see if there is a ')' later; helps decide between “missing ')'” vs “extra arg”
+
     private static boolean hasClosingParenAhead(List<Token> input, int fromIndex) {
         for (int i = fromIndex; i < input.size(); i++) {
             Token t = input.get(i);
@@ -84,7 +84,7 @@ public class Parser {
             if (lookaheadIndex < input.size()) {
                 lookahead = input.get(lookaheadIndex);
             } else {
-                lookahead = null; // reached end
+                lookahead = null;
             }
 
             if (lookahead == null && parenDepth > 0) {
@@ -93,10 +93,10 @@ public class Parser {
 
             if (top instanceof Token.TokenType) {
                 if (lookahead != null && top == lookahead.getType()) {
-                    // track parentheses + simple operator context
+
                     if (top == Token.TokenType.LPAREN) {
                         parenDepth++;
-                        opNames.push("apply");  // placeholder, set on parenexpr
+                        opNames.push("apply");
                         opExpected.push(-1);
                     } else if (top == Token.TokenType.RPAREN) {
                         parenDepth--;
@@ -110,7 +110,7 @@ public class Parser {
                     lookaheadIndex++;
                     stack.pop();
                 } else {
-                    // Prefer specific errors
+
                     if (top == Token.TokenType.RPAREN
                             && lookahead != null
                             && isExprStart(lookahead.getType())
@@ -144,10 +144,10 @@ public class Parser {
                 List<Object> production = (lookahead == null) ? null : parseTable.get(top).get(lookahead.getType());
 
                 if (production != null) {
-                    // set simple operator context when we expand parenexpr
+
                     if (top == nonterminals.parenexpr && lookahead != null) {
                         Token.TokenType la = lookahead.getType();
-                        if (!opNames.isEmpty()) { opNames.pop(); opExpected.pop(); } // replace placeholder
+                        if (!opNames.isEmpty()) { opNames.pop(); opExpected.pop(); }
 
                         if (la == Token.TokenType.PLUS || la == Token.TokenType.MINUS
                                 || la == Token.TokenType.MULT || la == Token.TokenType.EQUALS) {
@@ -159,13 +159,13 @@ public class Parser {
                             opNames.push("?");
                             opExpected.push(3);
                         } else if (la == Token.TokenType.LAMBDA) {
-                            opNames.push("λ");     // λ IDENT expr
-                            opExpected.push(2);    // IDENT counts as slot 1, expr as slot 2
+                            opNames.push("λ");
+                            opExpected.push(2);
                         } else if (la == Token.TokenType.LET) {
                             opNames.push("≜");     // ≜ IDENT expr expr
                             opExpected.push(3);
                         } else if (isExprStart(la)) {
-                            opNames.push("apply"); // function application (var-arity)
+                            opNames.push("apply");
                             opExpected.push(-1);
                         } else {
                             opNames.push("apply");
@@ -176,7 +176,7 @@ public class Parser {
                     stack.pop();
                     for (int i = production.size() - 1; i >= 0; i--) stack.push(production.get(i));
                 } else {
-                    // not enough args: need expr but saw ')'
+
                     if (top == nonterminals.expr
                             && lookahead != null
                             && lookahead.getType() == Token.TokenType.RPAREN
@@ -188,7 +188,6 @@ public class Parser {
                                     + op + "': not enough arguments before ')'.");
                         }
                     }
-                    // end-of-input while expecting more → missing ')'
                     if (lookahead == null && parenDepth > 0) {
                         throw new ExpressionException("Missing ')' to close an opening '(' (reached end of input).");
                     }
