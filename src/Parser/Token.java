@@ -67,6 +67,15 @@ public class Token {
         return this.isNumber() ? Optional.of(value) : Optional.empty();
     }
 
+    public int getIntValue() {
+        if (this.isNumber()) {
+            return (int) this.value;
+        }
+        else {
+            return 0;
+        }
+    }
+
     public Optional<String> getIdentifierName() { return this.isIdentifier() ? Optional.of(identifier) : Optional.empty(); }
 
     public static TokenType typeOf(char symbol) {

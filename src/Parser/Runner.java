@@ -7,11 +7,13 @@ import java.util.List;
 public class Runner {
     public static void main(String[] args) throws NumberException, ExpressionException {
         try {
-            String testInput = "((λ x (+ x 1)) 5)";
+            String testInput = "(+ 2 x)";
+            System.out.println("Input: " + testInput);
             List<Token> tokenizedInput = Lexer.analyse(testInput);
 //        System.out.println(tokenizedInput);
-            System.out.println(Parser.parse(tokenizedInput));
+//            System.out.println(Parser.parse(tokenizedInput));
             /*Parser.parse();*/
+            Parser.printParseTree(tokenizedInput);
         }
         catch(Exception e) {
             System.out.println("Parsing failed");
