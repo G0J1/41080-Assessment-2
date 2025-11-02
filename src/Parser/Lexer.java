@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Lexer{
-    // Call this from main
+
     public static List<Token> analyse(String input) throws NumberException, ExpressionException {
         ArrayList<Token> tokens = new ArrayList<>();
         String buffer = "";

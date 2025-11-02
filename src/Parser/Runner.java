@@ -47,9 +47,9 @@ public class Runner {
             String functionTest3 = "((λ j (+ x 8)) 7)";
 //            blah(functionTest3);
 
-            String error1 = "(+ 2 1";
-            String error2 = ")";
-            String error3 = "(- a a 1)";
+            String errorTest1 = "(+ 2 1";
+            String errorTest2 = ")";
+            String errorTest3 = "(- a a 1)";
 
 
             ArrayList<String> basicTestCases = new ArrayList<>();
@@ -60,6 +60,9 @@ public class Runner {
 
             ArrayList<String> functionTestCases = new ArrayList<>();
             ArrayList<String> functionTestCaseOutputs = new ArrayList<>();
+
+            ArrayList<String> errorTestCases = new ArrayList<>();
+            ArrayList<String> errorTestCaseOutputs = new ArrayList<>();
 
             basicTestCases.add(basicTest1);
             basicTestCases.add(basicTest2);
@@ -72,6 +75,10 @@ public class Runner {
             functionTestCases.add(functionTest1);
             functionTestCases.add(functionTest2);
             functionTestCases.add(functionTest3);
+
+            errorTestCases.add(errorTest1);
+            errorTestCases.add(errorTest2);
+            errorTestCases.add(errorTest3);
 
             for (String test : basicTestCases) {
                 String output = Parser.parseTreeToString(Lexer.analyse(test));
@@ -94,9 +101,22 @@ public class Runner {
                 testResults.add(new TestResult(test, output));
             }
 
+            for (String test : errorTestCases) {
+                try {
+                    System.out.println("Input: " + test);
+                    String output = Parser.parseTreeToString(Lexer.analyse(test));
+                    System.out.println("Output: " + output);
+//                testResults.add(new TestResult(test, output));
+                }
+                catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+
+            }
+
         }
         catch(Exception e) {
-            System.out.println("Parsing failed");
+            System.out.println(e.getMessage());
         }
 
         Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
