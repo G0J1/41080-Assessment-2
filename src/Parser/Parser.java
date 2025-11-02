@@ -40,7 +40,7 @@ public class Parser {
 
         // does the same for the expr non terminal, it has the same rules as the program
         exprRow.put(Token.TokenType.NUMBER, List.of(Token.TokenType.NUMBER));
-        exprRow.put(Token.TokenType.IDENTIFIER, List.of(Token.TokenType.NUMBER));
+        exprRow.put(Token.TokenType.IDENTIFIER, List.of(Token.TokenType.IDENTIFIER));
         exprRow.put(Token.TokenType.LPAREN, List.of(Token.TokenType.LPAREN, nonterminals.parenexpr, Token.TokenType.RPAREN));
 
         // then also the production rules for paren-expr
@@ -64,7 +64,7 @@ public class Parser {
         stack.push(nonterminals.$);
         stack.push(nonterminals.program);
         Token lookahead = input.get(0);
-        System.out.println("stack: " + stack);
+//        System.out.println("stack: " + stack);
         int lookaheadIndex = 0;
 
         // this is the loop where the actual parsing is gonna happen
@@ -72,10 +72,10 @@ public class Parser {
 
             // pseudo code for stack loop
             Object top = stack.peek();
-            System.out.println("parsetree: " + parseTree);
-            System.out.println("stack: " + stack);
-            System.out.println("top: " + top);
-            System.out.println("lookahead: " + lookahead);
+//            System.out.println("parsetree: " + parseTree);
+//            System.out.println("stack: " + stack);
+//            System.out.println("top: " + top);
+//            System.out.println("lookahead: " + lookahead);
 
             if (lookaheadIndex < input.size()) {
                 lookahead = input.get(lookaheadIndex);
@@ -101,7 +101,7 @@ public class Parser {
 
                 if (production != null) {
                     stack.pop();
-                    System.out.println("production: " + production);
+//                    System.out.println("production: " + production);
 //                    System.out.println("production at index 0: " + production.get(0));
 //                    System.out.println("table rule: " + parseTable.get(nonterminals.program).get(Token.TokenType.LPAREN));
 //                        System.out.println(i);
@@ -110,7 +110,7 @@ public class Parser {
                         stack.push(production.get(i));
                     }
                 } else {
-                    System.out.println(lookahead.getType());
+//                    System.out.println(lookahead.getType());
                     throw new ExpressionException("No rule for " + top + " with lookahead " + lookahead);
                 }
             }
@@ -120,5 +120,50 @@ public class Parser {
             }
         }
         return parseTree;
+    }
+
+    public static void printParseTree(List<Token> input) throws ExpressionException, NumberException {
+        String printedTree = "";
+        parse(input);
+        for (int i = 0; i < parseTree.size(); i++) {
+            Token token = parseTree.get(i);
+            System.out.println(token);
+            if (token.isNumber()) {
+                printedTree += token.getIntValue();
+                if ((i + 1) < parseTree.size()) {
+                    if (!(parseTree.get(i + 1).getType() == Token.TokenType.RPAREN)) {
+                        printedTree += ", ";
+                    }
+                }
+            }
+            else if (token.isIdentifier()) {
+                printedTree += "'" + token + "'";
+                if ((i + 1) < parseTree.size()) {
+                    if (!(parseTree.get(i + 1).getType() == Token.TokenType.RPAREN)) {
+                        printedTree += ", ";
+                    }
+                }
+            }
+            else if (token.getType() ==  Token.TokenType.RPAREN ||  token.getType() ==  Token.TokenType.LPAREN) {
+                printedTree += token;
+                if ((i + 1) < parseTree.size()) {
+                    if (token.getType() ==  Token.TokenType.RPAREN && !(parseTree.get(i + 1).getType() == Token.TokenType.RPAREN)) {
+                        printedTree += ", ";
+                    }
+                }
+            }
+            else {
+                printedTree += "'" + token.getType() + "'";
+                if ((i + 1) < parseTree.size()) {
+                    if (!(parseTree.get(i + 1).getType() == Token.TokenType.RPAREN)) {
+                        printedTree += ", ";
+                    }
+                }
+
+            }
+        }
+
+
+        System.out.println("Output: " + printedTree);
     }
 }
