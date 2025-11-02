@@ -87,6 +87,10 @@ public class Parser {
                 lookahead = null; // reached end
             }
 
+            if (lookahead == null && parenDepth > 0) {
+                throw new ExpressionException("Unmatched parenthesis: missing ')' before end of input.");
+            }
+
             if (top instanceof Token.TokenType) {
                 if (lookahead != null && top == lookahead.getType()) {
                     // track parentheses + simple operator context
@@ -121,10 +125,13 @@ public class Parser {
                                     + op + "': expected " + expect + ", but found extra argument before ')'.");
                         }
                     }
-                    if (lookahead != null && lookahead.getType() == Token.TokenType.RPAREN && parenDepth == 0) {
+                    else if (lookahead != null && lookahead.getType() == Token.TokenType.RPAREN && parenDepth == 0) {
                         throw new ExpressionException("Unmatched ')' at position " + lookaheadIndex + ".");
                     }
-                    throw new ExpressionException("Unexpected token");
+                    else {
+                        throw new ExpressionException("Unexpected token");
+                    }
+
                 }
             }
             else if (top == nonterminals.$) {

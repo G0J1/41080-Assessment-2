@@ -49,7 +49,7 @@ public class Runner {
 
             String errorTest1 = "(+ 2 1";
             String errorTest2 = ")";
-            String errorTest3 = "(- a a 1)";
+            String errorTest3 = "(− 2 x a)";
 
 
             ArrayList<String> basicTestCases = new ArrayList<>();
