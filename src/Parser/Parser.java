@@ -14,7 +14,7 @@ public class Parser {
         program, expr, parenexpr, $
     }
 
-    // ==== INSERT A: error-context helpers ====
+
     private static final Deque<OpCtx> opStack = new ArrayDeque<>();
     private static int parenDepth = 0;
 
@@ -36,7 +36,7 @@ public class Parser {
     private static String tokenRepr(Token t) {
         return (t == null) ? "EOF" : t.toString();
     }
-    // ==== END INSERT A ====
+
 
     // sets up empty parse table, outer map has non terminals as the key (horizontal row headings) and has the inner table
     // as its value, the inner table forms the vertical rows which are keyed by the tokentype (which is an enum in the token class)
@@ -82,10 +82,10 @@ public class Parser {
         Stack<Object> stack = new Stack<>();
         parseTree.clear();
 
-        // ==== INSERT B: reset error-tracking ====
+
         opStack.clear();
         parenDepth = 0;
-        // ==== END INSERT B ====
+
 
         stack.push(nonterminals.$);
         stack.push(nonterminals.program);
@@ -95,7 +95,7 @@ public class Parser {
         // this is the loop where the actual parsing is gonna happen
         while (!stack.isEmpty()) {
 
-            // pseudo code for stack loop
+
             Object top = stack.peek();
 
             if (lookaheadIndex < input.size()) {
@@ -105,7 +105,7 @@ public class Parser {
             if (top instanceof Token.TokenType) {
                 if (top == lookahead.getType()) {
 
-                    // ==== INSERT C1: track parens and unmatched ')' ====
+
                     if (top == Token.TokenType.LPAREN) {
                         parenDepth++;
                         // push placeholder; actual op set when parenexpr expands
@@ -117,15 +117,14 @@ public class Parser {
                         }
                         if (!opStack.isEmpty()) opStack.pop();
                     }
-                    // ==== END INSERT C1 ====
+
 
                     parseTree.add(lookahead);
                     lookaheadIndex++;
                     stack.pop();
                 } else {
 
-                    // ==== INSERT C2: tailored terminal mismatches ====
-                    // Too many args: we expected ')' but saw another expr-start
+
                     if (top == Token.TokenType.RPAREN
                             && isExprStart(lookahead.getType())
                             && !opStack.isEmpty()) {
@@ -138,21 +137,21 @@ public class Parser {
                             );
                         }
                     }
-                    // Unmatched ')' at top level
+
                     if (lookahead.getType() == Token.TokenType.RPAREN && parenDepth == 0) {
                         throw new ExpressionException("Unmatched ')' at position " + lookaheadIndex + ".");
                     }
-                    // ==== END INSERT C2 ====
+
 
                     throw new ExpressionException("Unexpected token");
                 }
             }
             else if (top == nonterminals.$) {
-                // ==== INSERT E: final paren check ====
+
                 if (parenDepth != 0) {
                     throw new ExpressionException("Missing ')' to close an opening '(' (reached end of input).");
                 }
-                // ==== END INSERT E ====
+
                 return parseTree;
             }
             else if (top instanceof nonterminals) {
@@ -161,10 +160,10 @@ public class Parser {
 
                 if (production != null) {
 
-                    // ==== INSERT D1: set operator context for parenexpr ====
+
                     if (top == nonterminals.parenexpr) {
                         Token.TokenType la = lookahead.getType();
-                        // replace the placeholder pushed when '(' matched
+
                         if (!opStack.isEmpty()) opStack.pop();
 
                         if (la == Token.TokenType.PLUS || la == Token.TokenType.MINUS
@@ -185,15 +184,13 @@ public class Parser {
                             opStack.push(new OpCtx("apply", -1));      // safe default
                         }
                     }
-                    // ==== END INSERT D1 ====
 
                     stack.pop();
                     for (int i = production.size() - 1; i >= 0; i--) {
                         stack.push(production.get(i));
                     }
                 } else {
-                    // ==== INSERT D2: not enough args & missing ')' ====
-                    // Not enough args: we expected an expr but saw ')'
+
                     if (top == nonterminals.expr
                             && lookahead.getType() == Token.TokenType.RPAREN
                             && !opStack.isEmpty()) {
@@ -205,15 +202,14 @@ public class Parser {
                             );
                         }
                     }
-                    // End-of-input while expecting more → likely missing ')'
+
                     if (lookaheadIndex >= input.size()) {
                         if (parenDepth > 0) {
                             throw new ExpressionException("Missing ')' to close an opening '(' (reached end of input).");
                         }
                     }
-                    // ==== END INSERT D2 ====
 
-                    // original throw
+
                     throw new ExpressionException("No rule for " + top + " with lookahead " + lookahead);
                 }
             }
@@ -222,11 +218,11 @@ public class Parser {
             }
         }
 
-        // ==== INSERT F: safety net ====
+
         if (parenDepth > 0) {
             throw new ExpressionException("Missing ')' to close an opening '(' (reached end of input).");
         }
-        // ==== END INSERT F ====
+
 
         return parseTree;
     }
