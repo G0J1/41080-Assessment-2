@@ -57,13 +57,13 @@ public final class Lexer{
             Tokens.add(newToken);
         }
         else if (num.matches("[a-zA-Z][a-zA-Z0-9]*")) {
-            System.out.println("tokenize identifier");
+//            System.out.println("tokenize identifier");
             Token newToken = new Token(num);
             Tokens.add(newToken);
         }
         else if (symbols.contains(num) && num.length() == 1) {
             Token newToken = new Token(Token.typeOf(num.charAt(0)));
-            System.out.println(newToken.getType());
+//            System.out.println(newToken.getType());
             Tokens.add(newToken);
         }
     }

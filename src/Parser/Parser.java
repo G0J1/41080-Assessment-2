@@ -91,7 +91,7 @@ public class Parser {
                 }
             }
             else if (top == nonterminals.$) {
-                System.out.println("Success");
+//                System.out.println("Success");
                 return parseTree;
             }
 
@@ -127,7 +127,7 @@ public class Parser {
         parse(input);
         for (int i = 0; i < parseTree.size(); i++) {
             Token token = parseTree.get(i);
-            System.out.println(token);
+//            System.out.println(token);
             if (token.isNumber()) {
                 printedTree += token.getIntValue();
                 if ((i + 1) < parseTree.size()) {
