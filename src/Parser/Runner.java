@@ -3,21 +3,119 @@ package Parser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class Runner {
+    static class TestResult {
+        String input;
+        String output;
+
+        public TestResult(String input, String output) {
+            this.input = input;
+            this.output = output;
+        }
+    }
+
+
     public static void main(String[] args) throws NumberException, ExpressionException {
+        ArrayList<TestResult> testResults = new ArrayList<>();
+
         try {
-            String testInput = "(+ 2 x)";
-            System.out.println("Input: " + testInput);
-            List<Token> tokenizedInput = Lexer.analyse(testInput);
-//        System.out.println(tokenizedInput);
-//            System.out.println(Parser.parse(tokenizedInput));
-            /*Parser.parse();*/
-            Parser.printParseTree(tokenizedInput);
+            String basicTest1 = "y";
+//            blah(basicTest1);
+            String basicTest2 = "67";
+//            blah(basicTest2);
+            String basicTest3 = "(− 2 2)";
+//            blah(basicTest3);
+            String basicTest4 = "(= x 5)";
+//            blah(basicTest4);
+
+            String nestedTest1 = "(+ (+ 4 2) 0)";
+//            blah(nestedTest1);
+            String nestedTest2 = "(? (+ 1 z) 5 9)";
+//            blah(nestedTest2);
+
+
+            String functionTest1 = "(≜ x 5 7)";
+//            blah(functionTest1);
+            String functionTest2 = "(λ a 5)";
+//            blah(functionTest2);
+            String functionTest3 = "((λ j (+ x 8)) 7)";
+//            blah(functionTest3);
+
+            String error1 = "(+ 2 1";
+            String error2 = ")";
+            String error3 = "(- a a 1)";
+
+
+            ArrayList<String> basicTestCases = new ArrayList<>();
+            ArrayList<String> basicTestCaseOutputs = new ArrayList<>();
+
+            ArrayList<String> nestedTestCases = new ArrayList<>();
+            ArrayList<String> nestedTestCaseOutputs = new ArrayList<>();
+
+            ArrayList<String> functionTestCases = new ArrayList<>();
+            ArrayList<String> functionTestCaseOutputs = new ArrayList<>();
+
+            basicTestCases.add(basicTest1);
+            basicTestCases.add(basicTest2);
+            basicTestCases.add(basicTest3);
+            basicTestCases.add(basicTest4);
+
+            nestedTestCases.add(nestedTest1);
+            nestedTestCases.add(nestedTest2);
+
+            functionTestCases.add(functionTest1);
+            functionTestCases.add(functionTest2);
+            functionTestCases.add(functionTest3);
+
+            for (String test : basicTestCases) {
+                String output = Parser.parseTreeToString(Lexer.analyse(test));
+                System.out.println("Input: " + test);
+                System.out.println("Output: " + output);
+                testResults.add(new TestResult(test, output));
+            }
+
+            for (String test : nestedTestCases) {
+                String output = Parser.parseTreeToString(Lexer.analyse(test));
+                System.out.println("Input: " + test);
+                System.out.println("Output: " + output);
+                testResults.add(new TestResult(test, output));
+            }
+
+            for (String test : functionTestCases) {
+                String output = Parser.parseTreeToString(Lexer.analyse(test));
+                System.out.println("Input: " + test);
+                System.out.println("Output: " + output);
+                testResults.add(new TestResult(test, output));
+            }
+
         }
         catch(Exception e) {
             System.out.println("Parsing failed");
         }
 
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        String jsonOutput = gson.toJson(testResults);
+
+
+        try (FileWriter file = new FileWriter("output.json")) {
+            file.write(jsonOutput);
+            System.out.println("JSON written to output.json");
+        } catch (IOException e) {
+            System.out.println("Error writing JSON: " + e.getMessage());
+        }
+    }
+
+    public static void blah(String input) throws NumberException, ExpressionException {
+        System.out.println("Input: " + input);
+        List<Token> tokenizedInput = Lexer.analyse(input);
+        String parseTree = Parser.parseTreeToString(tokenizedInput);
+        System.out.println("Output: " + parseTree);
     }
 }
+

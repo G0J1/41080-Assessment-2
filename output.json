@@ -1,0 +1,38 @@
+[
+  {
+    "input": "y",
+    "output": "'y'"
+  },
+  {
+    "input": "67",
+    "output": "67"
+  },
+  {
+    "input": "(− 2 2)",
+    "output": "['MINUS', 2, 2]"
+  },
+  {
+    "input": "(= x 5)",
+    "output": "['EQUALS', 'x', 5]"
+  },
+  {
+    "input": "(+ (+ 4 2) 0)",
+    "output": "['PLUS', ['PLUS', 4, 2], 0]"
+  },
+  {
+    "input": "(? (+ 1 z) 5 9)",
+    "output": "['CONDITIONAL', ['PLUS', 1, 'z'], 5, 9]"
+  },
+  {
+    "input": "(≜ x 5 7)",
+    "output": "['LET', 'x', 5, 7]"
+  },
+  {
+    "input": "(λ a 5)",
+    "output": "['LAMBDA', 'a', 5]"
+  },
+  {
+    "input": "((λ j (+ x 8)) 7)",
+    "output": "[['LAMBDA', 'j', ['PLUS', 'x', 8]], 7]"
+  }
+]

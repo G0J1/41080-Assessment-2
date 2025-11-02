@@ -53,14 +53,14 @@ public class Parser {
         parenExprRow.put(Token.TokenType.MINUS, List.of(Token.TokenType.MINUS, nonterminals.expr, nonterminals.expr));
         parenExprRow.put(Token.TokenType.CONDITIONAL, List.of(Token.TokenType.CONDITIONAL, nonterminals.expr, nonterminals.expr, nonterminals.expr));
         parenExprRow.put(Token.TokenType.LAMBDA, List.of(Token.TokenType.LAMBDA, Token.TokenType.IDENTIFIER, nonterminals.expr));
-        parenExprRow.put(Token.TokenType.LET, List.of(Token.TokenType.LET, Token.TokenType.IDENTIFIER, nonterminals.expr));
+        parenExprRow.put(Token.TokenType.LET, List.of(Token.TokenType.LET, Token.TokenType.IDENTIFIER, nonterminals.expr, nonterminals.expr));
 
     }
 
 
     public static List<Token> parse(List<Token> input) throws ExpressionException, NumberException {
         Stack<Object> stack = new Stack<>();
-
+        parseTree.clear();
         stack.push(nonterminals.$);
         stack.push(nonterminals.program);
         Token lookahead = input.get(0);
@@ -122,7 +122,7 @@ public class Parser {
         return parseTree;
     }
 
-    public static void printParseTree(List<Token> input) throws ExpressionException, NumberException {
+    public static String parseTreeToString(List<Token> input) throws ExpressionException, NumberException {
         String printedTree = "";
         parse(input);
         for (int i = 0; i < parseTree.size(); i++) {
@@ -164,6 +164,6 @@ public class Parser {
         }
 
 
-        System.out.println("Output: " + printedTree);
+        return printedTree;
     }
 }
